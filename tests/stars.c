@@ -1,6 +1,4 @@
 #include "../src/asciigl.h"
-#include <windows.h>
-
 
 typedef struct
 {
@@ -50,7 +48,7 @@ int main()
         }
 
         aglSwapBuffers(buffer);
-        Sleep(16);
+        wait_mills(16);
     }
 
     aglEndContext(buffer);
