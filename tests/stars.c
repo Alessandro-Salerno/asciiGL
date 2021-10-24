@@ -1,4 +1,6 @@
 #include "../src/asciigl.h"
+#include "../atk/utils.h"
+
 
 typedef struct
 {
@@ -48,7 +50,7 @@ int main()
         }
 
         aglSwapBuffers(buffer);
-        wait_mills(16);
+        atkWaitMills(16);
     }
 
     aglEndContext(buffer);

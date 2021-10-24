@@ -22,11 +22,7 @@ limitations under the License.
     #include <stdio.h>
     #include <stdbool.h>
     #include <stdlib.h>
-    #ifdef _WIN32
-        #include <windows.h>
-    #else
-        #include <unistd.h>
-    #endif
+
 
     #pragma region CONSOLE
         void consoleMoveCursor(int x, int y)
@@ -199,15 +195,6 @@ limitations under the License.
             consoleRestoreCursorPosition();
             consoleShowCursor();
         }
-
-        void wait_mills(unsigned int mills) {
-            #ifdef _WIN32
-                Sleep(mills);
-            #else
-                sleep(mills/1000);
-            #endif
-        }
-
     #pragma endregion
 
 #endif

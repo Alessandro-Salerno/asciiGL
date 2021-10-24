@@ -1,4 +1,5 @@
 #include "../src/asciigl.h"
+#include "../atk/utils.h"
 #include <math.h>
 #include <time.h>
 
@@ -34,16 +35,16 @@ int main()
             else if (y == 25)
                 y -= 1;
 
-            for (int i = 0; i < 5 && y < 25; i++)
+            for (int i = 0; i < 2 && y < 25; i++)
                 y += rand() % 2;
 
-            for (int i = 0; i < 5 && y > 0; i++)
+            for (int i = 0; i < 2 && y > 0; i++)
                 y -= rand() % 2;
 
             aglSetCell(buffer, x, y, 219, 118);
 
             aglSwapBuffers(buffer);
-            wait_mills(16);
+            atkWaitMills(16);
         }
         
         y = rand() % 20;
