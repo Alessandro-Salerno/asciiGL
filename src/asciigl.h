@@ -1,5 +1,5 @@
 /***********************************************************************
-                         Basic Console Graphics Library
+                                     asciiGL
                         Copyright 2021 Alessandro Salerno
 
 Licensed under the Apache License, Version 2.0 (the "License");
