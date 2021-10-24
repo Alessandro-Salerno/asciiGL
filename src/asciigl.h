@@ -148,14 +148,7 @@ limitations under the License.
                     int index = aglTranslateCoordinates(buffer, x, y);
 
                     if (buffer->texture[index] != buffer->previouscolor[index] || buffer->colorbuffer[index] != buffer->previouscolor[index])
-                    {
                         aglDrawCell(buffer, x, y);
-                        
-                        if (index + 1 != buffer->size)
-                            aglDrawIndex(buffer, index + 1);
-                        else
-                            aglDrawIndex(buffer, index);
-                    }
                 }
             }
 
