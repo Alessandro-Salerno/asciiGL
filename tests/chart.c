@@ -1,5 +1,4 @@
 #include "../src/asciigl.h"
-#include <windows.h>
 #include <math.h>
 #include <time.h>
 
@@ -44,7 +43,7 @@ int main()
             aglSetCell(buffer, x, y, 219, 118);
 
             aglSwapBuffers(buffer);
-            Sleep(16);
+            wait_mills(16);
         }
         
         y = rand() % 20;
