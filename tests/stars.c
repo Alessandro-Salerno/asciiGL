@@ -23,8 +23,8 @@ int main()
     for (int i = 0; i < buffer->size; i++)
         buffer->texture[i] = '+';
 
-    aglInitContext(buffer);
-
+    atkInit(buffer);
+    
     while (true)
     {
         for (int i = 0; i < buffer->size; i++)

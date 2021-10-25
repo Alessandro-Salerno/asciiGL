@@ -15,6 +15,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***********************************************************************/
 
+#include "../src/asciigl.h"
+#include <stdlib.h>
 
 #ifdef _WIN32
     #include <windows.h>
@@ -22,7 +24,7 @@ limitations under the License.
     #include <unistd.h>
 #endif
 
-
+// Wait n. milliseconds
 void atkWaitMills(unsigned int mills)
 {
     #ifdef _WIN32
@@ -30,4 +32,25 @@ void atkWaitMills(unsigned int mills)
     #else
         sleep(mills/1000);
     #endif
+}
+
+// Reset console, cursor and exit
+void atkEndProgram()
+{
+    consoleClearScreen();
+    consoleRestoreCursorPosition();
+    consoleShowCursor();
+    exit(0);
+}
+
+// Call 'ResetConsole' when CTRL-C is pressed
+void atkInitInterrupt()
+{
+    signal(SIGINT, atkEndProgram);
+}
+
+// Init framebuffer and event listener
+void atkInit(framebuffer buffer) {
+    aglInitContext(buffer);
+    atkInitInterrupt();
 }

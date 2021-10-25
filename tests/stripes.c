@@ -1,5 +1,5 @@
 #include "../src/asciigl.h"
-
+#include "../atk/utils.h"
 
 int main()
 {
@@ -8,7 +8,7 @@ int main()
     for (int i = 0; i < buffer->size; i++)
         buffer->texture[i] = '+';
 
-    aglInitContext(buffer);
+    atkInit(buffer);
 
     color col = 16;
     int dir = 1;
