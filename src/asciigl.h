@@ -190,11 +190,8 @@ limitations under the License.
             free(buffer->colorbuffer);
             free(buffer->previouscolor);
             free(buffer);
-
-            consoleClearScreen();
-            consoleRestoreCursorPosition();
-            consoleShowCursor();
         }
+
     #pragma endregion
 
 #endif

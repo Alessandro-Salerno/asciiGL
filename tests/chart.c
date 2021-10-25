@@ -12,7 +12,7 @@ int main()
     for (int i = 0; i < buffer->size; i++)
         buffer->texture[i] = '+';
 
-    aglInitContext(buffer);
+    atkInit(buffer);
 
     int y = 12;
     int prev = y;
