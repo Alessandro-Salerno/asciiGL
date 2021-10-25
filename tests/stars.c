@@ -53,5 +53,5 @@ int main()
         atkWaitMills(16);
     }
 
-    aglEndContext(buffer);
+    atkEnd(buffer);
 }

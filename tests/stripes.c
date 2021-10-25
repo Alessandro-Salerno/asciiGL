@@ -1,6 +1,7 @@
 #include "../src/asciigl.h"
 #include "../atk/utils.h"
 
+
 int main()
 {
     framebuffer buffer = Framebuffer(110, 28);
@@ -59,5 +60,5 @@ int main()
         aglSwapBuffers(buffer);
     }
 
-    aglEndContext(buffer);
+    atkEnd(buffer);
 }

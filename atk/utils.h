@@ -15,42 +15,57 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***********************************************************************/
 
-#include "../src/asciigl.h"
-#include <stdlib.h>
+#ifndef ATK_UTILS_H
+#define ATK_UTILS_H
 
-#ifdef _WIN32
-    #include <windows.h>
-#else
-    #include <unistd.h>
-#endif
+    #include "../src/asciigl.h"
+    #include <stdlib.h>
 
-// Wait n. milliseconds
-void atkWaitMills(unsigned int mills)
-{
     #ifdef _WIN32
-        Sleep(mills);
+        #include <windows.h>
+        #include <signal.h>
     #else
-        sleep(mills/1000);
+        #include <unistd.h>
     #endif
-}
 
-// Reset console, cursor and exit
-void atkEndProgram()
-{
-    consoleClearScreen();
-    consoleRestoreCursorPosition();
-    consoleShowCursor();
-    exit(0);
-}
 
-// Call 'ResetConsole' when CTRL-C is pressed
-void atkInitInterrupt()
-{
-    signal(SIGINT, atkEndProgram);
-}
+    // Wait n. milliseconds
+    void atkWaitMills(unsigned int mills)
+    {
+        #ifdef _WIN32
+            Sleep(mills);
+        #else
+            sleep(mills/1000);
+        #endif
+    }
 
-// Init framebuffer and event listener
-void atkInit(framebuffer buffer) {
-    aglInitContext(buffer);
-    atkInitInterrupt();
-}
+    // Reset console, cursor and exit
+    void atkEndProgram()
+    {
+        consoleClearScreen();
+        consoleRestoreCursorPosition();
+        consoleShowCursor();
+        exit(0);
+    }
+
+    // Call 'ResetConsole' when CTRL-C is pressed
+    void atkInitInterrupt()
+    {
+        signal(SIGINT, atkEndProgram);
+    }
+
+    // Init framebuffer and event listener
+    void atkInit(framebuffer buffer)
+    {
+        aglInitContext(buffer);
+        atkInitInterrupt();
+    }
+
+    // Terminates everything
+    void atkEnd(framebuffer buffer)
+    {
+        aglEndContext(buffer);
+        atkEndProgram();
+    }
+
+#endif
