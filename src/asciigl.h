@@ -75,9 +75,9 @@ limitations under the License.
         void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
         {
             c->content = content;
-            c->tint   = (color) { .bgcolor = bgcolor, .fgcolor = fgcolor};
-            c->update = true;
-            c->uptint = true;
+            c->tint    = (color) { .bgcolor = bgcolor, .fgcolor = fgcolor };
+            c->update  = true;
+            c->uptint  = true;
         }
 
         typedef struct
@@ -96,12 +96,12 @@ limitations under the License.
         {
             framebuffer buffer    = (framebuffer)(malloc(sizeof(_Framebuffer)));
 
-            buffer->width         = width;
-            buffer->height        = height;
-            buffer->size          = width * height;
+            buffer->width     = width;
+            buffer->height    = height;
+            buffer->size      = width * height;
 
-            buffer->texture       = (cell*)(malloc(sizeof(cell) * buffer->size));
-            buffer->printbuff     = (char*)(malloc(buffer->size * 7));
+            buffer->texture   = (cell*)(malloc(sizeof(cell) * buffer->size));
+            buffer->printbuff = (char*)(malloc(buffer->size * 7));
 
             for (int i = 0 ; i < buffer->size; i++)
                 _InitializeCell(&buffer->texture[i], ' ', 255, 0);
@@ -133,9 +133,9 @@ limitations under the License.
 
         void aglDrawFramebuffer(framebuffer buffer)
         {
-            for (int y = 0; y < buffer->height; y++)
+            for (coord y = 0; y < buffer->height; y++)
             {
-                for (int x = 0; x < buffer->width; x++)
+                for (coord x = 0; x < buffer->width; x++)
                     aglDrawIndex(buffer, aglTranslateCoordinates(buffer, x, y));
 
                 printf("\n");
@@ -144,11 +144,11 @@ limitations under the License.
 
         void aglSwapBuffers(framebuffer buffer)
         {
-            for (int y = 0; y < buffer->height; y++)
+            for (coord y = 0; y < buffer->height; y++)
             {
-                for (int x = 0; x < buffer->width; x++)
+                for (coord x = 0; x < buffer->width; x++)
                 {
-                    int index = aglTranslateCoordinates(buffer, x, y);
+                    unsigned int index = aglTranslateCoordinates(buffer, x, y);
 
                     if (buffer->texture[index].update | buffer->texture[index].uptint)
                         aglDrawCell(buffer, x, y);
@@ -175,8 +175,6 @@ limitations under the License.
         {
             unsigned int idx = aglTranslateCoordinates(buffer, x, y);
             
-            buffer->texture[idx].update        = true;
-            buffer->texture[idx].uptint        = true;
             buffer->texture[idx].content       = content;
             buffer->texture[idx].tint.fgcolor  = fgcolor;
             buffer->texture[idx].tint.bgcolor  = bgcolor;

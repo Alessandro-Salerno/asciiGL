@@ -102,26 +102,30 @@ limitations under the License.
         atkInitInterrupt();
     }
 
-    // automatically resizes the framebuffer if the window has been resized
-    void atkAutoResize(framebuffer buffer)
-    {
-        unsigned int width  = atkGetConsoleWidth(),
-                     height = atkGetConsoleHeight() - 1;
-
-        if (buffer->width != width | buffer->height != height)
-        {
-            aglResizeFramebuffer(buffer, width, height);
-            consoleClearScreen();
-            aglDrawFramebuffer(buffer);
-        }
-    }
-
     // Clears the frame and color buffers
     void atkClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor)
     {
         for (coord y = 0; y < buffer->height; y++)
             for (coord x = 0; x < buffer->width; x++)
                 aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
+    }
+
+    // automatically resizes the framebuffer if the window has been resized
+    bool atkAutoResize(framebuffer buffer)
+    {
+        unsigned int width  = atkGetConsoleWidth(),
+                     height = atkGetConsoleHeight() - 1;
+
+        if (buffer->width == width && buffer->height == height)
+            return false;
+
+        aglResizeFramebuffer(buffer, width, height);
+        atkClear(buffer, ' ', Black, Black);
+        consoleClearScreen();
+        consoleHideCursor();
+        aglDrawFramebuffer(buffer);
+        
+        return true;
     }
 
     // Terminates everything
