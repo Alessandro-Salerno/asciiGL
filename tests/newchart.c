@@ -10,17 +10,15 @@ int main()
     srand(time(NULL));
 
     framebuffer buffer = atkSetup();
-    atkClear(buffer, '+', 255);
+    atkClear(buffer, '+', 255, 0);
     atkInit(buffer);
 
     while (true)
     {
-        atkClear(buffer, 219, 0);
+        atkClear(buffer, '+', 0, 0);
 
         for (int x = 0; x < buffer->width; x++)
         {
-            atkAutoResize(buffer);
-
             if (y == 0)
                 y += 1;
             
@@ -33,7 +31,7 @@ int main()
             for (int i = 0; i < 2 && y > 0; i++)
                 y -= rand() % 2;
 
-            aglSetCell(buffer, x, y, 219, 118);
+            aglSetCell(buffer, x, y, '+', 118, 118);
             aglSwapBuffers(buffer);
             atkWaitMills(16);
         }
