@@ -67,7 +67,7 @@ limitations under the License.
         #else
             struct winsize size;
             ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
-            return size.ws_co;
+            return size.ws_col;
         #endif
     }
 
