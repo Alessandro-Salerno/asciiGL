@@ -25,6 +25,7 @@ limitations under the License.
         #include <windows.h>
         #include <signal.h>
     #else
+        #define _POSIX_SOURCE
         #include <unistd.h>
     #endif
 
@@ -35,7 +36,7 @@ limitations under the License.
         #ifdef _WIN32
             Sleep(mills);
         #else
-            sleep(mills/1000);
+            usleep(mills * 1000);
         #endif
     }
 

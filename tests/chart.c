@@ -42,8 +42,8 @@ int main()
                 y -= rand() % 2;
 
             aglSetCell(buffer, x, y, 219, 118);
-
             aglSwapBuffers(buffer);
+            atkWaitMills(16);
         }
         
         y = rand() % 20;

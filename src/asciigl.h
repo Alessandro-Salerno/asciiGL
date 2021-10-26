@@ -53,22 +53,24 @@ limitations under the License.
 
 
     #pragma region FRAMEBUFFER
+        typedef unsigned char color;
+        typedef unsigned char pixel;
+
         typedef struct
         {
-            unsigned char* colorbuffer; 
-            unsigned char* previouscolor; 
+            color* colorbuffer; 
+            color* previouscolor; 
 
-                     char* texture;
-                     char* previoustex;
-                     char* printbuff;
+            pixel* texture;
+            pixel* previoustex;
+            char*  printbuff;
 
-                     int   width;
-                     int   height;
-                     int   size;
+            int    width;
+            int    height;
+            int    size;
         } _Framebuffer;
 
         typedef _Framebuffer* framebuffer;
-        typedef unsigned char color;
 
         framebuffer Framebuffer(int width, int height)
         {
@@ -78,12 +80,12 @@ limitations under the License.
             buffer->height        = height;
             buffer->size          = width * height;
 
-            buffer->texture       = (char*)(malloc(buffer->size));
-            buffer->previoustex   = (char*)(malloc(buffer->size));
+            buffer->texture       = (pixel*)(malloc(buffer->size * sizeof(pixel)));
+            buffer->previoustex   = (pixel*)(malloc(buffer->size * sizeof(pixel)));
+            buffer->colorbuffer   = (color*)(malloc(buffer->size * sizeof(color)));
+            buffer->previouscolor = (color*)(malloc(buffer->size * sizeof(color)));
             buffer->printbuff     = (char*)(malloc(buffer->size * 5));
-            buffer->colorbuffer   = (unsigned char*)(malloc(buffer->size));
-            buffer->previouscolor = (unsigned char*)(malloc(buffer->size));
-            
+
             for (int i = 0; i < buffer->size; i++)
             {
                 buffer->texture[i]       = ' ';
@@ -108,7 +110,7 @@ limitations under the License.
             if (buffer->colorbuffer[index] != buffer->colorbuffer[index - 1])
                 printf("\033[38;5;%dm", buffer->colorbuffer[index]);
 
-            printf("%c", buffer->texture[index]);
+            printf("%lc", buffer->texture[index]);
         }
 
         void aglDrawCell(framebuffer buffer, int x, int y)
@@ -161,13 +163,13 @@ limitations under the License.
             buffer->height        = new_height;
             buffer->size          = new_width * new_height;
 
-            buffer->texture       = (char*)(realloc(buffer->texture, buffer->size));
-            buffer->previoustex   = (char*)(realloc(buffer->previoustex, buffer->size));
-            buffer->colorbuffer   = (unsigned char*)(realloc(buffer->colorbuffer, buffer->size));
-            buffer->previouscolor = (unsigned char*)(realloc(buffer->previouscolor, buffer->size));
+            buffer->texture       = (pixel*)(realloc(buffer->texture, buffer->size * sizeof(pixel)));
+            buffer->previoustex   = (pixel*)(realloc(buffer->previoustex, buffer->size * sizeof(pixel)));
+            buffer->colorbuffer   = (color*)(realloc(buffer->colorbuffer, buffer->size * sizeof(color)));
+            buffer->previouscolor = (color*)(realloc(buffer->previouscolor, buffer->size * sizeof(color)));
         }
 
-        void aglSetCell(framebuffer buffer, int x, int y, char content, color clr)
+        void aglSetCell(framebuffer buffer, int x, int y, pixel content, color clr)
         {
             buffer->texture[aglTranslateCoordinates(buffer, x, y)] = content;
             buffer->colorbuffer[aglTranslateCoordinates(buffer, x, y)] = clr; 
@@ -177,9 +179,7 @@ limitations under the License.
         {
             consoleClearScreen();
             consoleHideCursor();
-
             setvbuf(stdout, buffer->printbuff, _IOFBF, buffer->size * 5);
-
             aglDrawFramebuffer(buffer);
         }
 
