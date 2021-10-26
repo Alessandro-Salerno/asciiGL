@@ -117,13 +117,11 @@ limitations under the License.
     }
 
     // Clears the frame and color buffers
-    void atkClear(framebuffer buffer, pixel chr, color clr)
+    void atkClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor)
     {
-        for (int i = 0; i < buffer->size; i++)
-            buffer->texture[i] = chr;
-
-        for (int i = 0; i < buffer->size; i++)
-            buffer->colorbuffer[i] = clr;
+        for (coord y = 0; y < buffer->height; y++)
+            for (coord x = 0; x < buffer->width; x++)
+                aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
     }
 
     // Terminates everything
