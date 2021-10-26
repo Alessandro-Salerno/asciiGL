@@ -22,6 +22,7 @@ limitations under the License.
     #include <stdio.h>
     #include <stdbool.h>
     #include <stdlib.h>
+    #include <stdbool.h>
 
 
     #pragma region CONSOLE
@@ -55,6 +56,20 @@ limitations under the License.
     #pragma region FRAMEBUFFER
         typedef unsigned char color;
         typedef unsigned char pixel;
+
+        typedef struct
+        {
+            unsigned int fgcolor;  // Foreground
+            unsigned int bgcolor;  // Background
+        } _Color;
+
+        typedef struct
+        {
+            pixel content;
+            color foreground;
+            color background;
+            bool  update;
+        } _Cell;
 
         typedef struct
         {
