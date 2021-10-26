@@ -27,6 +27,7 @@ limitations under the License.
     #else
         #define _POSIX_SOURCE
         #include <unistd.h>
+        #include <sys/ioctl.h>
     #endif
 
 
@@ -55,11 +56,74 @@ limitations under the License.
         signal(SIGINT, atkEndProgram);
     }
 
+    // Returns the width of the console
+    unsigned int atkGetConsoleWidth()
+    {
+        #ifdef _WIN32
+            CONSOLE_SCREEN_BUFFER_INFO csbi;
+            GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+            
+            return csbi.srWindow.Right - csbi.srWindow.Left + 1;
+        #else
+            struct winsize size;
+            ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+            return size.ws_co;
+        #endif
+    }
+
+    // Returns the height of the console
+    unsigned int atkGetConsoleHeight()
+    {
+        #ifdef _WIN32
+            CONSOLE_SCREEN_BUFFER_INFO csbi;
+            GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+            
+            return csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
+        #else
+            struct winsize size;
+            ioctl(STDOUT_FILENO, TIOCGWINSZ, &size);
+            return size.ws_row;
+        #endif
+    }
+
+    // Creates and returns a framebuffer with the same size as the window
+    framebuffer atkSetup()
+    {
+        unsigned int width  = atkGetConsoleWidth(),
+                     height = atkGetConsoleHeight() - 1;
+
+        return Framebuffer(width, height);
+    }
+
     // Init framebuffer and event listener
     void atkInit(framebuffer buffer)
     {
         aglInitContext(buffer);
         atkInitInterrupt();
+    }
+
+    // automatically resizes the framebuffer if the window has been resized
+    void atkAutoResize(framebuffer buffer)
+    {
+        unsigned int width  = atkGetConsoleWidth(),
+                     height = atkGetConsoleHeight() - 1;
+
+        if (buffer->width != width | buffer->height != height)
+        {
+            aglResizeFramebuffer(buffer, width, height);
+            consoleClearScreen();
+            aglDrawFramebuffer(buffer);
+        }
+    }
+
+    // Clears the frame and color buffers
+    void atkClear(framebuffer buffer, pixel chr, color clr)
+    {
+        for (int i = 0; i < buffer->size; i++)
+            buffer->texture[i] = chr;
+
+        for (int i = 0; i < buffer->size; i++)
+            buffer->colorbuffer[i] = clr;
     }
 
     // Terminates everything

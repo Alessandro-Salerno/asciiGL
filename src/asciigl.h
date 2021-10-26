@@ -157,7 +157,7 @@ limitations under the License.
             aglEndDraw(buffer);
         }
 
-        void aglResizeFramebuffer(framebuffer buffer, int new_width, int new_height)
+        void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height)
         {
             buffer->width         = new_width;
             buffer->height        = new_height;
