@@ -24,6 +24,8 @@ limitations under the License.
     #include <stdlib.h>
     #include <stdbool.h>
 
+    #define AGL_EMPTY_CHAR ' '
+    
     
     #pragma region CONSOLE
         void consoleMoveCursor(int x, int y)
@@ -72,7 +74,7 @@ limitations under the License.
             bool  uptint; 
         } cell;
 
-        void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
+        static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
         {
             c->content = content;
             c->tint    = (color) { .bgcolor = bgcolor, .fgcolor = fgcolor };
