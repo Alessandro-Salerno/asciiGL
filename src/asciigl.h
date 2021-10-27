@@ -77,7 +77,7 @@ limitations under the License.
         static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
         {
             c->content = content;
-            c->tint    = (color) { .bgcolor = bgcolor, .fgcolor = fgcolor };
+            c->tint    = (color) { .fgcolor = fgcolor, .bgcolor = bgcolor };
             c->update  = true;
             c->uptint  = true;
         }

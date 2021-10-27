@@ -5,9 +5,7 @@
     #include "../atk/colors.h"
     #include "../atk/utils.h"
 
-    typedef               char   byte;
     typedef               char   int8;
-    typedef unsigned      char   ubyte;
     typedef unsigned      char   uint8;
     typedef               short  int16;
     typedef unsigned      short  uint16;
