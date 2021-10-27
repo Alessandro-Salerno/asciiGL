@@ -7,6 +7,8 @@
 
 int main()
 {
+    atkSetWindowTitle("Chart Generator - asciiGL");
+
     coord y = 12;
     srand(time(NULL));
 

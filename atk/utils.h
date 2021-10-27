@@ -15,6 +15,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ***********************************************************************/
 
+
 #ifndef ATK_UTILS_H
 #define ATK_UTILS_H
 
@@ -43,7 +44,8 @@ limitations under the License.
     }
 
     // Change window title
-    void atkWindowTitle(char* title) {
+    void atkSetWindowTitle(char* title)
+    {
         #ifdef _WIN32
             SetConsoleTitle(title);
         #else

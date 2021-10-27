@@ -117,6 +117,9 @@
 
             void Run()
             {
+                // Set the window title
+                atkSetWindowTitle("Basic Engine v1.0 - Small Game");
+
                 // Creates a new framebuffer using ATK
                 framebuffer buffer = atkSetup();
 

@@ -24,7 +24,7 @@ void Draw(framebuffer buffer)
             if (x % 2 == 0)
                 DrawCell(buffer, x, y);
 
-    atkWaitMills(16);
+    atkWaitMills(32);
 }
 
 
