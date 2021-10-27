@@ -19,6 +19,7 @@ limitations under the License.
 #define ATK_UTILS_H
 
     #include "../src/asciigl.h"
+    #include "colors.h"
     #include <stdlib.h>
 
     #ifdef _WIN32
@@ -41,6 +42,15 @@ limitations under the License.
         #endif
     }
 
+    // Change window title
+    void atkWindowTitle(char* title) {
+        #ifdef _WIN32
+            SetConsoleTitle(title);
+        #else
+            printf("\033]0;%s\007", title);
+        #endif
+    }
+    
     // Reset console, cursor and exit
     void atkEndProgram(int signum)
     {
