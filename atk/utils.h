@@ -42,7 +42,7 @@ limitations under the License.
     }
 
     // Reset console, cursor and exit
-    void atkEndProgram()
+    void atkEndProgram(int signum)
     {
         consoleClearScreen();
         consoleRestoreCursorPosition();
@@ -132,7 +132,7 @@ limitations under the License.
     void atkEnd(framebuffer buffer)
     {
         aglEndContext(buffer);
-        atkEndProgram();
+        atkEndProgram(0);
     }
 
 #endif
