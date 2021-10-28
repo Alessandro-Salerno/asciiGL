@@ -114,14 +114,6 @@ limitations under the License.
         atkInitInterrupt();
     }
 
-    // Clears the frame and color buffers
-    void atkClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor)
-    {
-        for (coord y = 0; y < buffer->height; y++)
-            for (coord x = 0; x < buffer->width; x++)
-                aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
-    }
-
     // automatically resizes the framebuffer if the window has been resized
     bool atkAutoResize(framebuffer buffer)
     {
@@ -132,7 +124,7 @@ limitations under the License.
             return false;
 
         aglResizeFramebuffer(buffer, width, height);
-        atkClear(buffer, ' ', Black, Black);
+        aglClear(buffer, ' ', Black, Black);
         consoleClearScreen();
         consoleHideCursor();
         aglDrawFramebuffer(buffer);

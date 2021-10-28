@@ -124,7 +124,7 @@
                     framebuffer buffer = atkSetup();
 
                     // Clears and draws the buffer
-                    atkClear(buffer, AGL_EMPTY_CHAR, Black, Black);
+                    aglClear(buffer, AGL_EMPTY_CHAR, Black, Black);
                     atkInit(buffer);
 
                     // Main loop

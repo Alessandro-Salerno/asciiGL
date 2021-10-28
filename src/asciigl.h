@@ -182,6 +182,13 @@ limitations under the License.
             buffer->texture[idx].tint.bgcolor  = bgcolor;
         }
 
+        void aglClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor)
+        {
+            for (coord y = 0; y < buffer->height; y++)
+                for (coord x = 0; x < buffer->width; x++)
+                    aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
+        }
+
         void aglInitContext(framebuffer buffer)
         {
             consoleClearScreen();

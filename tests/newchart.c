@@ -13,12 +13,12 @@ int main()
     srand(time(NULL));
 
     framebuffer buffer = atkSetup();
-    atkClear(buffer, '+', Black, Black);
+    aglClear(buffer, '+', Black, Black);
     atkInit(buffer);
 
     while (true)
     {
-        atkClear(buffer, AGL_EMPTY_CHAR, Black, Black);
+        aglClear(buffer, AGL_EMPTY_CHAR, Black, Black);
 
         for (coord x = 0; x < buffer->width; x++)
         {
