@@ -31,13 +31,13 @@ void Draw(framebuffer buffer)
 int main()
 {
     // Creates an instance of the Engine class
-    Engine engine;
+    BasicEngine::Clock clock;
 
     // Adds the rendering function to the engine's list of scheduled functions
-    engine.ScheduleFunction(Draw);
+    clock.ScheduleFunction(Draw);
 
     // Calls the engine's initialization method
-    engine.Run();
+    clock.Run();
 
     return 0;
 }

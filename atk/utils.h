@@ -44,7 +44,7 @@ limitations under the License.
     }
 
     // Change window title
-    void atkSetWindowTitle(char* title)
+    void atkSetWindowTitle(const char* title)
     {
         #ifdef _WIN32
             SetConsoleTitle(title);
