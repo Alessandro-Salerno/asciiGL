@@ -70,17 +70,8 @@ limitations under the License.
         {
             pixel content;
             color tint;
-            bool  update;
-            bool  uptint; 
+            bool  update; 
         } cell;
-
-        static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
-        {
-            c->content = content;
-            c->tint    = (color) { .fgcolor = fgcolor, .bgcolor = bgcolor };
-            c->update  = true;
-            c->uptint  = true;
-        }
 
         typedef struct
         {
@@ -93,6 +84,13 @@ limitations under the License.
         } _Framebuffer;
 
         typedef _Framebuffer* framebuffer;
+
+        static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
+        {
+            c->content = content;
+            c->tint    = (color) { .fgcolor = fgcolor, .bgcolor = bgcolor };
+            c->update  = true;
+        }
 
         framebuffer Framebuffer(unsigned int width, unsigned int height)
         {
@@ -121,16 +119,23 @@ limitations under the License.
 
         void aglDrawIndex(framebuffer buffer, unsigned int index)
         {
-            if (buffer->texture[index].uptint)
+            if (buffer->texture[index].update)
+            {
                 printf("\033[38;5;%dm\033[48;5;%dm", buffer->texture[index].tint.fgcolor, buffer->texture[index].tint.bgcolor);
-
-            printf("%lc", buffer->texture[index].content);
+                printf("%lc", buffer->texture[index].content);
+            }
         }
         
         void aglDrawCell(framebuffer buffer, coord x, coord y)
         {
             consoleMoveCursor(x, y);
             aglDrawIndex(buffer, aglTranslateCoordinates(buffer, x, y));
+        }
+    
+        void aglEndDraw(framebuffer buffer)
+        {
+            for (unsigned int i = 0; i < buffer->size; i++)
+                buffer->texture[i].update = false;
         }
 
         void aglDrawFramebuffer(framebuffer buffer)
@@ -142,20 +147,17 @@ limitations under the License.
 
                 printf("\n");
             }
+
+            aglEndDraw(buffer);
         }
 
         void aglSwapBuffers(framebuffer buffer)
         {
             for (coord y = 0; y < buffer->height; y++)
-            {
                 for (coord x = 0; x < buffer->width; x++)
-                {
-                    unsigned int index = aglTranslateCoordinates(buffer, x, y);
+                    aglDrawCell(buffer, x, y);
 
-                    if (buffer->texture[index].update | buffer->texture[index].uptint)
-                        aglDrawCell(buffer, x, y);
-                }
-            }
+            aglEndDraw(buffer);
         }
 
         void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height)
@@ -177,6 +179,7 @@ limitations under the License.
         {
             unsigned int idx = aglTranslateCoordinates(buffer, x, y);
             
+            buffer->texture[idx].update        = !(buffer->texture[idx].content == content && buffer->texture[idx].tint.fgcolor == fgcolor && buffer->texture[idx].tint.bgcolor == bgcolor);
             buffer->texture[idx].content       = content;
             buffer->texture[idx].tint.fgcolor  = fgcolor;
             buffer->texture[idx].tint.bgcolor  = bgcolor;
