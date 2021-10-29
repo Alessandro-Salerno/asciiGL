@@ -23,15 +23,6 @@ limitations under the License.
     #include "colors.h"
     #include <stdlib.h>
 
-    #ifdef _WIN32
-        #include <windows.h>
-        #include <signal.h>
-    #else
-        #define _POSIX_SOURCE
-        #include <unistd.h>
-        #include <sys/ioctl.h>
-    #endif
-
 
     // Wait n. milliseconds
     void atkWaitMills(unsigned int mills)
@@ -138,5 +129,17 @@ limitations under the License.
         aglEndContext(buffer);
         atkEndProgram(0);
     }
+
+    // Experimental async input handler
+    #if defined (_WIN32) && defined (EXPERIMENTAL_FEATURES)
+        short atkIsKeyPressed(int key)
+        {
+            return GetAsyncKeyState(key);
+        }
+    #else
+        short atkIsKeyPressed(int key)
+        {
+        }
+    #endif
 
 #endif

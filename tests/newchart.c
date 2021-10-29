@@ -1,3 +1,4 @@
+#define EXPERIMENTAL_FEATURES
 #include "../src/asciigl.h"
 #include "../atk/colors.h"
 #include "../atk/utils.h"
@@ -22,6 +23,9 @@ int main()
 
         for (coord x = 0; x < buffer->width; x++)
         {
+            if (atkIsKeyPressed(VK_ESCAPE))
+                atkEnd(buffer);
+
             if (atkAutoResize(buffer))
                 break;
 

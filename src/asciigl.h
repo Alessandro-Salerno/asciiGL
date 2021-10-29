@@ -24,13 +24,40 @@ limitations under the License.
     #include <stdlib.h>
     #include <stdbool.h>
 
+    #ifndef EXPERIMENTAL_FEATURES
+        #ifdef LEGACY_CONSOLE
+            #undef LEGACY_CONSOLE
+            #warning "Ignoring LEGACY_CONSOLE due to lack of EXPERIMENTAL_FEATURES"
+        #endif
+    #endif
+
+    #ifdef _WIN32
+        #include <windows.h>
+        #include <signal.h>
+
+        #ifdef LEGACY_CONSOLE
+            #warning "Legacy Console Mode (LEGACY_CONSOLE) is enabled, this may result in slower rendering and reduced color depth!"
+        #endif
+    #else
+        #define _POSIX_SOURCE
+        #include <unistd.h>
+        #include <sys/ioctl.h>
+    #endif
+
     #define AGL_EMPTY_CHAR ' '
     
     
     #pragma region CONSOLE
         void consoleMoveCursor(int x, int y)
         {
-            printf("\033[%d;%dH", y, x);
+            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
+                COORD coord;
+                coord.X = x;
+                coord.Y = y;
+                SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+            #else
+                printf("\033[%d;%dH", y, x);
+            #endif
         }
 
         void consoleRestoreCursorPosition()
@@ -40,17 +67,52 @@ limitations under the License.
 
         void consoleHideCursor()
         {
-            printf("\e[?25l");
+            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
+                HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+                CONSOLE_CURSOR_INFO info;
+                info.dwSize = 100;
+                info.bVisible = FALSE;
+                SetConsoleCursorInfo(consoleHandle, &info);
+            #else
+                printf("\e[?25l");
+            #endif
         }
 
         void consoleShowCursor()
         {
-            printf("\e[?25h");
+            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
+                HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+                CONSOLE_CURSOR_INFO info;
+                info.dwSize = 100;
+                info.bVisible = TRUE;
+                SetConsoleCursorInfo(consoleHandle, &info);
+            #else
+                printf("\e[?25h");
+            #endif
         }
 
         void consoleClearScreen()
         {
-            printf("\033c");
+            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
+                COORD topLeft  = { 0, 0 };
+                HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
+                CONSOLE_SCREEN_BUFFER_INFO screen;
+                DWORD written;
+
+                GetConsoleScreenBufferInfo(console, &screen);
+                FillConsoleOutputCharacterA(
+                    console, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written
+                );
+
+                FillConsoleOutputAttribute(
+                    console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
+                    screen.dwSize.X * screen.dwSize.Y, topLeft, &written
+                );
+
+                SetConsoleCursorPosition(console, topLeft);
+            #else
+                printf("\033c");
+            #endif
         }
     #pragma endregion
 
@@ -79,8 +141,8 @@ limitations under the License.
             unsigned int    height; 
                      size_t size;
 
-            cell*           texture;
-            char*           printbuff;
+                     cell*  texture;
+                     char*  printbuff;
         } _Framebuffer;
 
         typedef _Framebuffer* framebuffer;
@@ -121,7 +183,13 @@ limitations under the License.
         {
             if (buffer->texture[index].update)
             {
-                printf("\033[38;5;%dm\033[48;5;%dm", buffer->texture[index].tint.fgcolor, buffer->texture[index].tint.bgcolor);
+                #if defined (_WIN32) && defined (LEGACY_CONSOLE)
+                    WORD wColor = ((buffer->texture[index].tint.bgcolor & 0x0F) << 4) + (buffer->texture[index].tint.fgcolor & 0x0F);
+                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wColor);
+                #else
+                    printf("\033[38;5;%dm\033[48;5;%dm", buffer->texture[index].tint.fgcolor, buffer->texture[index].tint.bgcolor);
+                #endif
+
                 printf("%lc", buffer->texture[index].content);
             }
         }
@@ -148,16 +216,23 @@ limitations under the License.
                 printf("\n");
             }
 
-            aglEndDraw(buffer);
+            #ifndef LEGACY_CONSOLE
+                aglEndDraw(buffer);
+            #endif
         }
 
         void aglSwapBuffers(framebuffer buffer)
         {
-            for (coord y = 0; y < buffer->height; y++)
-                for (coord x = 0; x < buffer->width; x++)
-                    aglDrawCell(buffer, x, y);
+            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
+                consoleClearScreen();
+                aglDrawFramebuffer(buffer);
+            #else
+                for (coord y = 0; y < buffer->height; y++)
+                    for (coord x = 0; x < buffer->width; x++)
+                        aglDrawCell(buffer, x, y);
 
-            aglEndDraw(buffer);
+                aglEndDraw(buffer);
+            #endif
         }
 
         void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height)
