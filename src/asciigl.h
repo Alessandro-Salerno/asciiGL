@@ -52,11 +52,11 @@ limitations under the License.
         {
             #if defined (_WIN32) && defined (LEGACY_CONSOLE)
                 COORD coord;
-                coord.X = x;
-                coord.Y = y;
+                coord.X = x + 1;
+                coord.Y = y + 1;
                 SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
             #else
-                printf("\033[%d;%dH", y, x);
+                printf("\033[%d;%dH", y + 1, x + 1);
             #endif
         }
 
@@ -181,7 +181,9 @@ limitations under the License.
 
         void aglDrawIndex(framebuffer buffer, unsigned int index)
         {
-            if (buffer->texture[index].update)
+            #ifndef NO_REFRESH_OPTIMIZATION
+                if (buffer->texture[index].update)
+            #endif
             {
                 #if defined (_WIN32) && defined (LEGACY_CONSOLE)
                     WORD wColor = ((buffer->texture[index].tint.bgcolor & 0x0F) << 4) + (buffer->texture[index].tint.fgcolor & 0x0F);
