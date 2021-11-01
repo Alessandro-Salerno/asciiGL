@@ -269,6 +269,22 @@ limitations under the License.
                     aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
         }
 
+        framebuffer aglCloneFramebuffer(framebuffer buffer)
+        {
+            framebuffer new_buffer = Framebuffer(buffer->width, buffer->height);
+
+            for (coord y = 0; y < buffer->height; y++)
+                for (coord x = 0; x < buffer->width; x++)
+                    aglSetCell(
+                        new_buffer, x, y,
+                        buffer->texture[aglTranslateCoordinates(buffer, x, y)].content, 
+                        buffer->texture[aglTranslateCoordinates(buffer, x, y)].tint.fgcolor,
+                        buffer->texture[aglTranslateCoordinates(buffer, x, y)].tint.bgcolor
+                    );
+
+            return new_buffer;
+        }
+
         void aglInitContext(framebuffer buffer)
         {
             consoleClearScreen();

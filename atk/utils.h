@@ -45,18 +45,12 @@ limitations under the License.
     }
     
     // Reset console, cursor and exit
-    void atkEndProgram(int signum)
+    static void atkEndProgram(int signum)
     {
         consoleClearScreen();
         consoleRestoreCursorPosition();
         consoleShowCursor();
         exit(0);
-    }
-
-    // Call 'ResetConsole' when CTRL-C is pressed
-    void atkInitInterrupt()
-    {
-        signal(SIGINT, atkEndProgram);
     }
 
     // Returns the width of the console
@@ -102,7 +96,7 @@ limitations under the License.
     void atkInit(framebuffer buffer)
     {
         aglInitContext(buffer);
-        atkInitInterrupt();
+        signal(SIGINT, atkEndProgram);
     }
 
     // automatically resizes the framebuffer if the window has been resized
@@ -115,7 +109,7 @@ limitations under the License.
             return false;
 
         aglResizeFramebuffer(buffer, width, height);
-        aglClear(buffer, ' ', Black, Black);
+        aglClear(buffer, AGL_EMPTY_CHAR, Black, Black);
         consoleClearScreen();
         consoleHideCursor();
         aglDrawFramebuffer(buffer);
@@ -132,12 +126,12 @@ limitations under the License.
 
     // Experimental async input handler
     #if defined (_WIN32) && defined (EXPERIMENTAL_FEATURES)
-        short atkIsKeyPressed(int key)
+        short atkGetKeyState(int key)
         {
             return GetAsyncKeyState(key);
         }
     #else
-        short atkIsKeyPressed(int key)
+        short atkGetKeyState(int key)
         {
         }
     #endif

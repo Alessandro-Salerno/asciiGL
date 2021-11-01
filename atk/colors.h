@@ -16,11 +16,12 @@ limitations under the License.
 ***********************************************************************/
 
 
-#ifndef COLORS_H
-#define COLORS_H
+#ifndef ATK_COLORS_H
+#define ATK_COLORS_H
 
     // 16-bit standard colors
-    enum atkColor {
+    typedef enum
+    {
         Black,
         Red,
         Green,
@@ -37,6 +38,6 @@ limitations under the License.
         LightMagenta,
         LightCyan,
         White
-    };
+    } _ATKColor;
 
 #endif
