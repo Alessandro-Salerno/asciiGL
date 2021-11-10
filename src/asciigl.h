@@ -24,20 +24,9 @@ limitations under the License.
     #include <stdlib.h>
     #include <stdbool.h>
 
-    #ifndef EXPERIMENTAL_FEATURES
-        #ifdef LEGACY_CONSOLE
-            #undef LEGACY_CONSOLE
-            #warning "Ignoring LEGACY_CONSOLE due to lack of EXPERIMENTAL_FEATURES"
-        #endif
-    #endif
-
     #ifdef _WIN32
         #include <windows.h>
         #include <signal.h>
-
-        #ifdef LEGACY_CONSOLE
-            #warning "Legacy Console Mode (LEGACY_CONSOLE) is enabled, this may result in slower rendering and reduced color depth!"
-        #endif
     #else
         #define _POSIX_SOURCE
         #include <unistd.h>
@@ -50,14 +39,7 @@ limitations under the License.
     #pragma region CONSOLE
         void consoleMoveCursor(int x, int y)
         {
-            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
-                COORD coord;
-                coord.X = x + 1;
-                coord.Y = y + 1;
-                SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
-            #else
-                printf("\033[%d;%dH", y + 1, x + 1);
-            #endif
+            printf("\033[%d;%dH", y + 1, x + 1);
         }
 
         void consoleRestoreCursorPosition()
@@ -67,60 +49,25 @@ limitations under the License.
 
         void consoleHideCursor()
         {
-            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
-                HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-                CONSOLE_CURSOR_INFO info;
-                info.dwSize = 100;
-                info.bVisible = FALSE;
-                SetConsoleCursorInfo(consoleHandle, &info);
-            #else
-                printf("\e[?25l");
-            #endif
+            printf("\e[?25l");
         }
 
         void consoleShowCursor()
         {
-            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
-                HANDLE consoleHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-                CONSOLE_CURSOR_INFO info;
-                info.dwSize = 100;
-                info.bVisible = TRUE;
-                SetConsoleCursorInfo(consoleHandle, &info);
-            #else
-                printf("\e[?25h");
-            #endif
+            printf("\e[?25h");
         }
 
         void consoleClearScreen()
         {
-            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
-                COORD topLeft  = { 0, 0 };
-                HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);
-                CONSOLE_SCREEN_BUFFER_INFO screen;
-                DWORD written;
-
-                GetConsoleScreenBufferInfo(console, &screen);
-                FillConsoleOutputCharacterA(
-                    console, ' ', screen.dwSize.X * screen.dwSize.Y, topLeft, &written
-                );
-
-                FillConsoleOutputAttribute(
-                    console, FOREGROUND_GREEN | FOREGROUND_RED | FOREGROUND_BLUE,
-                    screen.dwSize.X * screen.dwSize.Y, topLeft, &written
-                );
-
-                SetConsoleCursorPosition(console, topLeft);
-            #else
-                printf("\033c");
-            #endif
+            printf("\033c");
         }
     #pragma endregion
 
 
     #pragma region FRAMEBUFFER
-        typedef unsigned char pixel; 
-        typedef unsigned int coord;
+        typedef unsigned char pixel;
         typedef unsigned char color_t; 
+        typedef unsigned int  coord;
 
         typedef struct
         {
@@ -165,7 +112,8 @@ limitations under the License.
             buffer->texture   = (cell*)(malloc(sizeof(cell) * buffer->size));
             buffer->printbuff = (char*)(malloc(buffer->size * 7));
 
-            for (int i = 0 ; i < buffer->size; i++)
+            int i;
+            for (i = 0 ; i < buffer->size; i++)
                 _InitializeCell(&buffer->texture[i], ' ', 255, 0);
 
             return buffer;
@@ -185,12 +133,11 @@ limitations under the License.
                 if (buffer->texture[index].update)
             #endif
             {
-                #if defined (_WIN32) && defined (LEGACY_CONSOLE)
-                    WORD wColor = ((buffer->texture[index].tint.bgcolor & 0x0F) << 4) + (buffer->texture[index].tint.fgcolor & 0x0F);
-                    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), wColor);
-                #else
-                    printf("\033[38;5;%dm\033[48;5;%dm", buffer->texture[index].tint.fgcolor, buffer->texture[index].tint.bgcolor);
-                #endif
+                printf(
+                    "\033[38;5;%dm\033[48;5;%dm",
+                    buffer->texture[index].tint.fgcolor,
+                    buffer->texture[index].tint.bgcolor
+                );
 
                 printf("%lc", buffer->texture[index].content);
             }
@@ -204,37 +151,33 @@ limitations under the License.
     
         void aglEndDraw(framebuffer buffer)
         {
-            for (unsigned int i = 0; i < buffer->size; i++)
+            unsigned int i;
+            for (i = 0; i < buffer->size; i++)
                 buffer->texture[i].update = false;
         }
 
         void aglDrawFramebuffer(framebuffer buffer)
         {
-            for (coord y = 0; y < buffer->height; y++)
+            coord x, y;
+            for (y = 0; y < buffer->height; y++)
             {
-                for (coord x = 0; x < buffer->width; x++)
+                for (x = 0; x < buffer->width; x++)
                     aglDrawIndex(buffer, aglTranslateCoordinates(buffer, x, y));
 
                 printf("\n");
             }
 
-            #ifndef LEGACY_CONSOLE
-                aglEndDraw(buffer);
-            #endif
+            aglEndDraw(buffer);
         }
 
         void aglSwapBuffers(framebuffer buffer)
         {
-            #if defined (_WIN32) && defined (LEGACY_CONSOLE)
-                consoleClearScreen();
-                aglDrawFramebuffer(buffer);
-            #else
-                for (coord y = 0; y < buffer->height; y++)
-                    for (coord x = 0; x < buffer->width; x++)
-                        aglDrawCell(buffer, x, y);
+            coord x, y;
+            for (y = 0; y < buffer->height; y++)
+                for (x = 0; x < buffer->width; x++)
+                    aglDrawCell(buffer, x, y);
 
-                aglEndDraw(buffer);
-            #endif
+            aglEndDraw(buffer);
         }
 
         void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height)
@@ -248,7 +191,8 @@ limitations under the License.
             buffer->texture       = (cell*)(realloc(buffer->texture, buffer->size * sizeof(cell)));
             buffer->printbuff     = (char*)(realloc(buffer->printbuff, buffer->size * 7));
 
-            for (int i = idx ; i < buffer->size; i++)
+            int i;
+            for (i = idx ; i < buffer->size; i++)
                 _InitializeCell(&buffer->texture[i], ' ', 255, 0);
         }
 
@@ -264,8 +208,9 @@ limitations under the License.
 
         void aglClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor)
         {
-            for (coord y = 0; y < buffer->height; y++)
-                for (coord x = 0; x < buffer->width; x++)
+            coord x, y;
+            for (y = 0; y < buffer->height; y++)
+                for (x = 0; x < buffer->width; x++)
                     aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
         }
 
@@ -273,8 +218,9 @@ limitations under the License.
         {
             framebuffer new_buffer = Framebuffer(buffer->width, buffer->height);
 
-            for (coord y = 0; y < buffer->height; y++)
-                for (coord x = 0; x < buffer->width; x++)
+            coord x, y; 
+            for (y = 0; y < buffer->height; y++)
+                for (x = 0; x < buffer->width; x++)
                     aglSetCell(
                         new_buffer, x, y,
                         buffer->texture[aglTranslateCoordinates(buffer, x, y)].content, 
@@ -300,6 +246,5 @@ limitations under the License.
             free(buffer);
         }
     #pragma endregion
-
 
 #endif

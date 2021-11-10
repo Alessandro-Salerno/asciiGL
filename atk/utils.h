@@ -95,6 +95,10 @@ limitations under the License.
     // Init framebuffer and event listener
     void atkInit(framebuffer buffer)
     {
+        #ifdef _WIN32
+            system("");
+        #endif
+
         aglInitContext(buffer);
         signal(SIGINT, atkEndProgram);
     }

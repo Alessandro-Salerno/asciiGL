@@ -11,10 +11,9 @@ Setting up asciiGL is very easy, just paste this code at the beginning of your m
 #include "atk/utils.h"
 ```
 
-Optionally, you can also specify a flags before the include statements
+Optionally, you can also specify flags before the include statements
 ```c
 #define EXPERIMENTAL_FEATURES /* Allows experimental features such as keyboard input in atk and legacy mode */
-#define LEGACY_CONSOLE /* Turns on legacy mode */
 #define NO_REFRESH_OPTIMIZATION /* Disables rendering optimizations */
 ```
 
