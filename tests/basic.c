@@ -7,7 +7,6 @@
 
 int main()
 {
-    system("");
     framebuffer buffer = atkSetup();
     aglClear(buffer, AGL_EMPTY_CHAR, White, White);
     atkInit(buffer);

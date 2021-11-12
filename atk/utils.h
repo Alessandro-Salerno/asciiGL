@@ -106,14 +106,16 @@ limitations under the License.
         #ifdef _WIN32
             system("");
         #else
-            struct termios new_termios;
+            #ifdef EXPERIMENTAL_FEATURES
+                struct termios new_termios;
 
-            tcgetattr(0, &orig_termios);
-            memcpy(&new_termios, &orig_termios, sizeof(new_termios));
+                tcgetattr(0, &orig_termios);
+                memcpy(&new_termios, &orig_termios, sizeof(new_termios));
 
-            cfmakeraw(&new_termios);
-            tcsetattr(0, TCSANOW, &new_termios);
-            consoleClearScreen();
+                cfmakeraw(&new_termios);
+                tcsetattr(0, TCSANOW, &new_termios);
+                consoleClearScreen();
+            #endif
         #endif
 
         aglInitContext(buffer);
