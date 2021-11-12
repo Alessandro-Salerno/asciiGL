@@ -23,6 +23,14 @@ limitations under the License.
     #include "colors.h"
     #include <stdlib.h>
 
+    #ifndef _WIN32
+        #include <string.h>
+        #include <termios.h>
+        #include <sys/select.h>
+
+        static struct termios orig_termios;
+    #endif
+
 
     // Wait n. milliseconds
     void atkWaitMills(unsigned int mills)
@@ -127,7 +135,7 @@ limitations under the License.
         aglEndContext(buffer);
         atkEndProgram(0);
     }
-
+    
     // Experimental async input handler
     #if defined (_WIN32) && defined (EXPERIMENTAL_FEATURES)
         short atkGetKeyState(int key)
@@ -137,6 +145,20 @@ limitations under the License.
     #else
         short atkGetKeyState(int key)
         {
+            unsigned char c;
+                     int  r;
+            
+            struct termios new_termios;
+
+            tcgetattr(0, &orig_termios);
+            memcpy(&new_termios, &orig_termios, sizeof(new_termios));
+
+            cfmakeraw(&new_termios);
+            tcsetattr(0, TCSANOW, &new_termios);
+            
+            int ret = ((r = read(0, &c, sizeof(c))) < 0) ? r : c;
+            tcsetattr(0, TCSANOW, &orig_termios);
+            return ret == key;
         }
     #endif
 
