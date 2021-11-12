@@ -26,7 +26,7 @@ limitations under the License.
     #ifndef _WIN32
         #include <string.h>
         #include <termios.h>
-        #include <sys/select.h>
+        #include <fcntl.h>
 
         static struct termios orig_termios;
     #endif
@@ -105,6 +105,15 @@ limitations under the License.
     {
         #ifdef _WIN32
             system("");
+        #else
+            struct termios new_termios;
+
+            tcgetattr(0, &orig_termios);
+            memcpy(&new_termios, &orig_termios, sizeof(new_termios));
+
+            cfmakeraw(&new_termios);
+            tcsetattr(0, TCSANOW, &new_termios);
+            consoleClearScreen();
         #endif
 
         aglInitContext(buffer);
@@ -148,16 +157,10 @@ limitations under the License.
             unsigned char c;
                      int  r;
             
-            struct termios new_termios;
-
-            tcgetattr(0, &orig_termios);
-            memcpy(&new_termios, &orig_termios, sizeof(new_termios));
-
-            cfmakeraw(&new_termios);
-            tcsetattr(0, TCSANOW, &new_termios);
-            
+            fcntl(0, F_SETFL, O_NONBLOCK);
             int ret = ((r = read(0, &c, sizeof(c))) < 0) ? r : c;
-            tcsetattr(0, TCSANOW, &orig_termios);
+            fcntl(0, F_SETFL, O_SYNC);
+            
             return ret == key;
         }
     #endif

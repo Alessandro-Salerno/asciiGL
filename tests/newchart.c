@@ -25,7 +25,7 @@ int main()
         coord x;
         for (x = 0; x < buffer->width; x++)
         {
-            if (atkGetKeyState(VK_ESCAPE))
+            if (atkGetKeyState(0x1B))
                 atkEnd(buffer);
 
             if (atkAutoResize(buffer))
