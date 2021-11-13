@@ -95,7 +95,7 @@ limitations under the License.
     framebuffer atkSetup()
     {
         unsigned int width  = atkGetConsoleWidth(),
-                     height = atkGetConsoleHeight() - 1;
+                     height = atkGetConsoleHeight();
 
         return Framebuffer(width, height);
     }
@@ -126,7 +126,7 @@ limitations under the License.
     bool atkAutoResize(framebuffer buffer)
     {
         unsigned int width  = atkGetConsoleWidth(),
-                     height = atkGetConsoleHeight() - 1;
+                     height = atkGetConsoleHeight();
 
         if (buffer->width == width && buffer->height == height)
             return false;
