@@ -46,7 +46,7 @@ int main()
             atkWaitMills(16);
         }
         
-        y = rand() % (buffer->height - 10);
+        y = rand() % (buffer->height - 5);
     }
 
     atkEnd(buffer);

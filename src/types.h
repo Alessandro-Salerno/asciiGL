@@ -16,36 +16,34 @@ limitations under the License.
 ***********************************************************************/
 
 
-#ifndef ASCIIGL_H
-#define ASCIIGL_H
+#ifndef ASCIIGL_TYPES_H
+#define ASCIIGL_TYPES_H
 
-    #include <stdio.h>
-    #include <stdlib.h>
-
-    #include "types.h"
-    #include "console.h"
-    #include "framebuffer.h"
-    #include "mathf.h"
-    #include "display.h"
-
-    #define AGL_EMPTY_CHAR ' '
+    #include <stdbool.h>
 
 
-    void aglInitContext(framebuffer buffer)
+    typedef unsigned char pixel;
+    typedef unsigned char color_t; 
+    typedef unsigned int  coord;
+
+    typedef struct color
     {
-        consoleClearScreen();
-        consoleHideCursor();
-        consoleMoveCursor(0, 0);
-        setvbuf(stdout, buffer->printbuff, _IOFBF, buffer->size * 7);
-        
-        aglDrawFramebuffer(buffer);
-    }
+        color_t fgcolor;
+        color_t bgcolor;
+    } color;
 
-    void aglEndContext()
+    typedef struct cell
     {
-        consoleClearScreen();
-        consoleRestoreCursorPosition();
-        consoleShowCursor();
+        pixel content;
+        color tint;
+        bool  update; 
+    } cell;
+
+    static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
+    {
+        c->content = content;
+        c->tint    = (color) { .fgcolor = fgcolor, .bgcolor = bgcolor };
+        c->update  = true;
     }
 
 #endif

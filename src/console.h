@@ -16,36 +16,35 @@ limitations under the License.
 ***********************************************************************/
 
 
-#ifndef ASCIIGL_H
-#define ASCIIGL_H
+#ifndef ASCIIGL_CONSOLE_H
+#define ASCIIGL_CONSOLE_H
 
     #include <stdio.h>
-    #include <stdlib.h>
-
-    #include "types.h"
-    #include "console.h"
-    #include "framebuffer.h"
-    #include "mathf.h"
-    #include "display.h"
-
-    #define AGL_EMPTY_CHAR ' '
 
 
-    void aglInitContext(framebuffer buffer)
+    void consoleMoveCursor(int x, int y)
     {
-        consoleClearScreen();
-        consoleHideCursor();
-        consoleMoveCursor(0, 0);
-        setvbuf(stdout, buffer->printbuff, _IOFBF, buffer->size * 7);
-        
-        aglDrawFramebuffer(buffer);
+        printf("\033[%d;%dH", y + 1, x + 1);
     }
 
-    void aglEndContext()
+    void consoleRestoreCursorPosition()
     {
-        consoleClearScreen();
-        consoleRestoreCursorPosition();
-        consoleShowCursor();
+        printf("\033[k");
+    }
+
+    void consoleHideCursor()
+    {
+        printf("\e[?25l");
+    }
+
+    void consoleShowCursor()
+    {
+        printf("\e[?25h");
+    }
+
+    void consoleClearScreen()
+    {
+        printf("\033c");
     }
 
 #endif

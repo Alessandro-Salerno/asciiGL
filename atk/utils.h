@@ -21,14 +21,18 @@ limitations under the License.
 
     #include "../src/asciigl.h"
     #include "colors.h"
-    #include <stdlib.h>
 
-    #ifndef _WIN32
+    #ifdef _WIN32
+        #include <windows.h>
+        #include <signal.h>
+    #else
+        #define _POSIX_SOURCE
+        #include <unistd.h>
+        #include <sys/ioctl.h>
+
         #include <string.h>
         #include <termios.h>
         #include <fcntl.h>
-
-        static struct termios orig_termios;
     #endif
 
 
@@ -55,10 +59,8 @@ limitations under the License.
     // Reset console, cursor and exit
     static void atkEndProgram(int signum)
     {
-        consoleClearScreen();
-        consoleRestoreCursorPosition();
-        consoleShowCursor();
-        exit(0);
+        aglEndContext();
+        exit(signum);
     }
 
     // Returns the width of the console
@@ -104,8 +106,10 @@ limitations under the License.
     void atkInit(framebuffer buffer)
     {
         #ifdef _WIN32
+            // Enables ANSI Escape codes
             system("");
         #else
+            // Enables support for input ok POSIX systems
             #ifdef EXPERIMENTAL_FEATURES
                 struct termios new_termios;
 
@@ -118,8 +122,10 @@ limitations under the License.
             #endif
         #endif
 
+        // Initializes the context and setups up signal handlers for CTRL+C and sigsegv
         aglInitContext(buffer);
         signal(SIGINT, atkEndProgram);
+        signal(SIGSEGV, atkEndProgram);
     }
 
     // automatically resizes the framebuffer if the window has been resized
@@ -128,22 +134,29 @@ limitations under the License.
         unsigned int width  = atkGetConsoleWidth(),
                      height = atkGetConsoleHeight();
 
+        // Returns if the context does not need to be resized
         if (buffer->width == width && buffer->height == height)
             return false;
 
+        // Waits untill the window has finished resizing
+        do
+        {
+            width  = atkGetConsoleWidth();
+            height = atkGetConsoleHeight();
+            atkWaitMills(30);
+        } while (atkGetConsoleWidth() != width || atkGetConsoleHeight() != height);
+
+        // Resizes framebuffer and reinitiaizes the context
         aglResizeFramebuffer(buffer, width, height);
-        aglClear(buffer, AGL_EMPTY_CHAR, Black, Black);
-        consoleClearScreen();
-        consoleHideCursor();
-        aglDrawFramebuffer(buffer);
-        
+        aglInitContext(buffer);
+
         return true;
     }
 
     // Terminates everything
     void atkEnd(framebuffer buffer)
     {
-        aglEndContext(buffer);
+        aglDeleteFramebuffer(buffer);
         atkEndProgram(0);
     }
     
