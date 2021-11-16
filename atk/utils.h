@@ -113,9 +113,6 @@ limitations under the License.
             #ifdef EXPERIMENTAL_FEATURES
                 struct termios new_termios;
 
-                tcgetattr(0, &orig_termios);
-                memcpy(&new_termios, &orig_termios, sizeof(new_termios));
-
                 cfmakeraw(&new_termios);
                 tcsetattr(0, TCSANOW, &new_termios);
                 consoleClearScreen();
@@ -167,13 +164,13 @@ limitations under the License.
             return GetAsyncKeyState(key);
         }
     #else
-        short atkGetKeyState(int key)
+        bool atkGetKeyState(int key)
         {
             unsigned char c;
-                     int  r;
+                     int  ret;
             
             fcntl(0, F_SETFL, O_NONBLOCK);
-            int ret = ((r = read(0, &c, sizeof(c))) < 0) ? r : c;
+            ret = ((read(0, &c, sizeof(c))) < 0) ? ret : c;
             fcntl(0, F_SETFL, O_SYNC);
             
             return ret == key;
