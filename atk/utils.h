@@ -26,8 +26,12 @@ limitations under the License.
         #include <windows.h>
         #include <signal.h>
     #else
-        #define _POSIX_SOURCE
+        #ifndef _POSIX_SOURCE
+            #define _POSIX_SOURCE
+        #endif
+
         #include <unistd.h>
+        #include <signal.h>
         #include <sys/ioctl.h>
 
         #include <string.h>
