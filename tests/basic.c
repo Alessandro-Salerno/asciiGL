@@ -5,8 +5,7 @@
 #include "../atk/utils.h"
 
 
-int main()
-{
+int main() {
     // Sets the window title to "Baisc Program - asciiGL" 
     atkSetWindowTitle("Baisc Program - asciiGL");
 
@@ -15,8 +14,7 @@ int main()
     atkInit(buffer);
     
     // Game loop
-    while (true)
-    {
+    while (true) {
         // End the program if th ESCAPE ky is pressed
         if (atkGetKeyState(0x1B))
             atkEnd(buffer);
