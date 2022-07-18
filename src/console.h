@@ -22,29 +22,10 @@ limitations under the License.
     #include <stdio.h>
 
 
-    void consoleMoveCursor(int x, int y)
-    {
-        printf("\033[%d;%dH", y + 1, x + 1);
-    }
-
-    void consoleRestoreCursorPosition()
-    {
-        printf("\033[k");
-    }
-
-    void consoleHideCursor()
-    {
-        printf("\e[?25l");
-    }
-
-    void consoleShowCursor()
-    {
-        printf("\e[?25h");
-    }
-
-    void consoleClearScreen()
-    {
-        printf("\033c");
-    }
+    void consoleMoveCursor              (int x, int y)  { printf("\033[%d;%dH", y + 1, x + 1); }
+    void consoleRestoreCursorPosition   ()              { printf("\033[k"); }
+    void consoleHideCursor              ()              { printf("\e[?25l"); }
+    void consoleShowCursor              ()              { printf("\e[?25h"); }
+    void consoleClearScreen             ()              { printf("\033c"); }
 
 #endif

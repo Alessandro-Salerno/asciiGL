@@ -31,8 +31,7 @@ limitations under the License.
     #define AGL_EMPTY_CHAR ' '
 
 
-    void aglInitContext(framebuffer buffer)
-    {
+    void aglInitContext(framebuffer buffer) {
         consoleClearScreen();
         consoleHideCursor();
         consoleMoveCursor(0, 0);
@@ -41,8 +40,7 @@ limitations under the License.
         aglDrawFramebuffer(buffer);
     }
 
-    void aglEndContext()
-    {
+    void aglEndContext() {
         consoleClearScreen();
         consoleRestoreCursorPosition();
         consoleShowCursor();

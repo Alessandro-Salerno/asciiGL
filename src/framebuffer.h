@@ -23,8 +23,7 @@ limitations under the License.
     #include "types.h"
 
 
-    struct _Framebuffer
-    {
+    struct _Framebuffer {
         unsigned int    width; 
         unsigned int    height; 
                  size_t size;
@@ -35,8 +34,7 @@ limitations under the License.
 
     typedef struct _Framebuffer* framebuffer;
 
-    framebuffer Framebuffer(unsigned int width, unsigned int height)
-    {
+    framebuffer Framebuffer(unsigned int width, unsigned int height) {
         framebuffer buffer = (framebuffer)(malloc(sizeof(struct _Framebuffer)));
 
         buffer->width      = width;
@@ -55,21 +53,18 @@ limitations under the License.
         return buffer;
     }
 
-    void aglDeleteFramebuffer(framebuffer buffer)
-    {
+    void aglDeleteFramebuffer(framebuffer buffer) {
         free(buffer->texture);
         free(buffer->printbuff);
         free(buffer);
     }
 
-    void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height)
-    {
+    void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height) {
         aglDeleteFramebuffer(buffer);
         buffer = Framebuffer(new_width, new_height);
     }
 
-    framebuffer aglCloneFramebuffer(framebuffer buffer)
-    {
+    framebuffer aglCloneFramebuffer(framebuffer buffer) {
         framebuffer new_buffer  = Framebuffer(buffer->width, buffer->height);
                     *new_buffer = *buffer;
 

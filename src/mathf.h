@@ -22,8 +22,7 @@ limitations under the License.
     #include "framebuffer.h"
 
 
-    int aglTranslateCoordinates(framebuffer buffer, coord x, coord y)
-    {
+    int aglTranslateCoordinates(framebuffer buffer, coord x, coord y) {
         return y * buffer->width + x;
     }
 

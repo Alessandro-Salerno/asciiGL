@@ -26,21 +26,18 @@ limitations under the License.
     typedef unsigned char color_t; 
     typedef unsigned int  coord;
 
-    typedef struct color
-    {
+    typedef struct color {
         color_t fgcolor;
         color_t bgcolor;
     } color;
 
-    typedef struct cell
-    {
+    typedef struct cell {
         pixel content;
         color tint;
         bool  update; 
     } cell;
 
-    static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor)
-    {
+    static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor) {
         c->content = content;
         c->tint    = (color) { .fgcolor = fgcolor, .bgcolor = bgcolor };
         c->update  = true;
