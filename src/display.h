@@ -50,14 +50,14 @@ limitations under the License.
 
     void aglEndDraw(framebuffer buffer)
     {
-        register unsigned int i;
+        unsigned int i;
         for (i = 0; i < buffer->size; i++)
             buffer->texture[i].update = false;
     }
 
     void aglDrawFramebuffer(framebuffer buffer)
     {
-        register coord x, y;
+        coord x, y;
         for (y = 0; y < buffer->height; y++)
         {
             (y != 0) ? printf("\n") : 0;
@@ -71,7 +71,7 @@ limitations under the License.
 
     void aglSwapBuffers(framebuffer buffer)
     {
-        register coord x, y;
+        coord x, y;
         for (y = 0; y < buffer->height; y++)
             for (x = 0; x < buffer->width; x++)
                 aglDrawCell(buffer, x, y);
@@ -91,7 +91,7 @@ limitations under the License.
 
     void aglClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor)
     {
-        register coord x, y;
+        coord x, y;
         for (y = 0; y < buffer->height; y++)
             for (x = 0; x < buffer->width; x++)
                 aglSetCell(buffer, x, y, chr, fgcolor, bgcolor);
