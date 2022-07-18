@@ -41,8 +41,7 @@ limitations under the License.
 
 
     // Wait n. milliseconds
-    void atkWaitMills(unsigned int mills)
-    {
+    void atkWaitMills(unsigned int mills) {
         #ifdef _WIN32
             Sleep(mills);
         #else
@@ -51,8 +50,7 @@ limitations under the License.
     }
 
     // Change window title
-    void atkSetWindowTitle(const char* title)
-    {
+    void atkSetWindowTitle(const char* title) {
         #ifdef _WIN32
             SetConsoleTitle(title);
         #else
@@ -61,15 +59,13 @@ limitations under the License.
     }
     
     // Reset console, cursor and exit
-    static void atkEndProgram(int signum)
-    {
+    static void atkEndProgram(int signum) {
         aglEndContext();
         exit(signum);
     }
 
     // Returns the width of the console
-    unsigned int atkGetConsoleWidth()
-    {
+    unsigned int atkGetConsoleWidth() {
         #ifdef _WIN32
             CONSOLE_SCREEN_BUFFER_INFO csbi;
             GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -83,8 +79,7 @@ limitations under the License.
     }
 
     // Returns the height of the console
-    unsigned int atkGetConsoleHeight()
-    {
+    unsigned int atkGetConsoleHeight() {
         #ifdef _WIN32
             CONSOLE_SCREEN_BUFFER_INFO csbi;
             GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
@@ -98,8 +93,7 @@ limitations under the License.
     }
 
     // Creates and returns a framebuffer_t with the same size as the window
-    framebuffer_t atkSetup()
-    {
+    framebuffer_t atkSetup() {
         unsigned int width  = atkGetConsoleWidth(),
                      height = atkGetConsoleHeight();
 
@@ -107,8 +101,7 @@ limitations under the License.
     }
 
     // Init framebuffer_t and event listener
-    void atkInit(framebuffer_t buffer)
-    {
+    void atkInit(framebuffer_t buffer) {
         #ifdef _WIN32
             // Enables ANSI Escape codes
             system("");
@@ -130,8 +123,7 @@ limitations under the License.
     }
 
     // automatically resizes the framebuffer_t if the window has been resized
-    bool atkAutoResize(framebuffer_t buffer)
-    {
+    bool atkAutoResize(framebuffer_t buffer) {
         unsigned int width  = atkGetConsoleWidth(),
                      height = atkGetConsoleHeight();
 
@@ -140,8 +132,7 @@ limitations under the License.
             return false;
 
         // Waits untill the window has finished resizing
-        do
-        {
+        do {
             width  = atkGetConsoleWidth();
             height = atkGetConsoleHeight();
             atkWaitMills(30);
@@ -155,21 +146,18 @@ limitations under the License.
     }
 
     // Terminates everything
-    void atkEnd(framebuffer_t buffer)
-    {
+    void atkEnd(framebuffer_t buffer) {
         aglDeleteaglNewFramebuffer(buffer);
         atkEndProgram(0);
     }
     
     // Experimental async input handler
     #if defined (_WIN32) && defined (EXPERIMENTAL_FEATURES)
-        short atkGetKeyState(int key)
-        {
+        short atkGetKeyState(int key) {
             return GetAsyncKeyState(key);
         }
     #else
-        bool atkGetKeyState(int key)
-        {
+        bool atkGetKeyState(int key) {
             unsigned char c;
                      int  ret;
             
