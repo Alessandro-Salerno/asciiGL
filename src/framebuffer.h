@@ -28,7 +28,7 @@ limitations under the License.
         unsigned int    height; 
                  size_t size;
 
-                 cell*  texture;
+                 cell_t*  texture;
                  char*  printbuff;
     };
 
@@ -41,10 +41,10 @@ limitations under the License.
         buffer->width        = width;
         buffer->height       = height;
         buffer->size         = width * height;
-        buffer->texture      = (cell*)(malloc(sizeof(cell) * buffer->size));
+        buffer->texture      = (cell_t*)(malloc(sizeof(cell_t) * buffer->size));
         buffer->printbuff    = (char*)(malloc(buffer->size * 7));
 
-        extern void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor);
+        extern void _InitializeCell(cell_t* c, pixel_t content, rawcolor_t fgcolor, rawcolor_t bgcolor);
                int  i;
 
         for (i = 0 ; i < buffer->size; i++)

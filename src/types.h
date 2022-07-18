@@ -22,24 +22,24 @@ limitations under the License.
     #include <stdbool.h>
 
 
-    typedef unsigned char pixel;
-    typedef unsigned char color_t; 
-    typedef unsigned int  coord;
+    typedef unsigned char pixel_t;
+    typedef unsigned char rawcolor_t; 
+    typedef unsigned int  coord_t;
 
     typedef struct color {
-        color_t fgcolor;
-        color_t bgcolor;
-    } color;
+        rawcolor_t fgcolor;
+        rawcolor_t bgcolor;
+    } color_t;
 
-    typedef struct cell {
-        pixel content;
-        color tint;
+    typedef struct cell_t {
+        pixel_t content;
+        color_t tint;
         bool  update; 
-    } cell;
+    } cell_t;
 
-    static void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor) {
+    static void _InitializeCell(cell_t* c, pixel_t content, rawcolor_t fgcolor, rawcolor_t bgcolor) {
         c->content = content;
-        c->tint    = (color) { .fgcolor = fgcolor, .bgcolor = bgcolor };
+        c->tint    = (color_t) { .fgcolor = fgcolor, .bgcolor = bgcolor };
         c->update  = true;
     }
 

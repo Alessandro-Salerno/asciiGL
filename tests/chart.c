@@ -11,7 +11,7 @@ int main()
 {
     atkSetWindowTitle("Chart Generator - asciiGL");
 
-    coord y = 12;
+    coord_t y = 12;
     srand(time(NULL));
 
     framebuffer_t buffer = atkSetup();
@@ -22,7 +22,7 @@ int main()
     {
         aglClear(buffer, AGL_EMPTY_CHAR, Black, Black);
 
-        coord x;
+        coord_t x;
         for (x = 0; x < buffer->width; x++)
         {
             if (atkGetKeyState(0x1B))
