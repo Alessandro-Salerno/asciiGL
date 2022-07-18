@@ -97,17 +97,17 @@ limitations under the License.
         #endif
     }
 
-    // Creates and returns a framebuffer with the same size as the window
-    framebuffer atkSetup()
+    // Creates and returns a framebuffer_t with the same size as the window
+    framebuffer_t atkSetup()
     {
         unsigned int width  = atkGetConsoleWidth(),
                      height = atkGetConsoleHeight();
 
-        return Framebuffer(width, height);
+        return aglNewFramebuffer(width, height);
     }
 
-    // Init framebuffer and event listener
-    void atkInit(framebuffer buffer)
+    // Init framebuffer_t and event listener
+    void atkInit(framebuffer_t buffer)
     {
         #ifdef _WIN32
             // Enables ANSI Escape codes
@@ -129,8 +129,8 @@ limitations under the License.
         signal(SIGSEGV, atkEndProgram);
     }
 
-    // automatically resizes the framebuffer if the window has been resized
-    bool atkAutoResize(framebuffer buffer)
+    // automatically resizes the framebuffer_t if the window has been resized
+    bool atkAutoResize(framebuffer_t buffer)
     {
         unsigned int width  = atkGetConsoleWidth(),
                      height = atkGetConsoleHeight();
@@ -147,17 +147,17 @@ limitations under the License.
             atkWaitMills(30);
         } while (atkGetConsoleWidth() != width || atkGetConsoleHeight() != height);
 
-        // Resizes framebuffer and reinitiaizes the context
-        aglResizeFramebuffer(buffer, width, height);
+        // Resizes framebuffer_t and reinitiaizes the context
+        aglResizeaglNewFramebuffer(buffer, width, height);
         aglInitContext(buffer);
 
         return true;
     }
 
     // Terminates everything
-    void atkEnd(framebuffer buffer)
+    void atkEnd(framebuffer_t buffer)
     {
-        aglDeleteFramebuffer(buffer);
+        aglDeleteaglNewFramebuffer(buffer);
         atkEndProgram(0);
     }
     

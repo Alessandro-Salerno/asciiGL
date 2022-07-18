@@ -32,17 +32,17 @@ limitations under the License.
                  char*  printbuff;
     };
 
-    typedef struct _Framebuffer* framebuffer;
+    typedef struct _Framebuffer* framebuffer_t;
 
-    framebuffer Framebuffer(unsigned int width, unsigned int height) {
-        framebuffer buffer = (framebuffer)(malloc(sizeof(struct _Framebuffer)));
 
-        buffer->width      = width;
-        buffer->height     = height;
-        buffer->size       = width * height;
+    framebuffer_t aglNewFramebuffer(unsigned int width, unsigned int height) {
+        framebuffer_t buffer = (framebuffer_t)(malloc(sizeof(struct _Framebuffer)));
 
-        buffer->texture    = (cell*)(malloc(sizeof(cell) * buffer->size));
-        buffer->printbuff  = (char*)(malloc(buffer->size * 7));
+        buffer->width        = width;
+        buffer->height       = height;
+        buffer->size         = width * height;
+        buffer->texture      = (cell*)(malloc(sizeof(cell) * buffer->size));
+        buffer->printbuff    = (char*)(malloc(buffer->size * 7));
 
         extern void _InitializeCell(cell* c, pixel content, color_t fgcolor, color_t bgcolor);
                int  i;
@@ -53,19 +53,19 @@ limitations under the License.
         return buffer;
     }
 
-    void aglDeleteFramebuffer(framebuffer buffer) {
+    void aglDeleteaglNewFramebuffer(framebuffer_t buffer) {
         free(buffer->texture);
         free(buffer->printbuff);
         free(buffer);
     }
 
-    void aglResizeFramebuffer(framebuffer buffer, unsigned int new_width, unsigned int new_height) {
-        aglDeleteFramebuffer(buffer);
-        buffer = Framebuffer(new_width, new_height);
+    void aglResizeaglNewFramebuffer(framebuffer_t buffer, unsigned int new_width, unsigned int new_height) {
+        aglDeleteaglNewFramebuffer(buffer);
+        buffer = aglNewFramebuffer(new_width, new_height);
     }
 
-    framebuffer aglCloneFramebuffer(framebuffer buffer) {
-        framebuffer new_buffer  = Framebuffer(buffer->width, buffer->height);
+    framebuffer_t aglCloneaglNewFramebuffer(framebuffer_t buffer) {
+        framebuffer_t new_buffer  = aglNewFramebuffer(buffer->width, buffer->height);
                     *new_buffer = *buffer;
 
         return new_buffer;

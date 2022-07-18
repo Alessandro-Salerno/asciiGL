@@ -26,7 +26,7 @@ limitations under the License.
     #include "framebuffer.h"
 
 
-    void aglDrawIndex(framebuffer buffer, unsigned int index) {
+    void aglDrawIndex(framebuffer_t buffer, unsigned int index) {
         #ifndef NO_REFRESH_OPTIMIZATION
             if (buffer->texture[index].update)
         #endif
@@ -38,18 +38,18 @@ limitations under the License.
                 );
     }
     
-    void aglDrawCell(framebuffer buffer, coord x, coord y) {
+    void aglDrawCell(framebuffer_t buffer, coord x, coord y) {
         consoleMoveCursor(x, y);
         aglDrawIndex(buffer, aglTranslateCoordinates(buffer, x, y));
     }
 
-    void aglEndDraw(framebuffer buffer) {
+    void aglEndDraw(framebuffer_t buffer) {
         unsigned int i;
         for (i = 0; i < buffer->size; i++)
             buffer->texture[i].update = false;
     }
 
-    void aglDrawFramebuffer(framebuffer buffer) {
+    void aglDrawFramebuffer(framebuffer_t buffer) {
         coord x, y;
         for (y = 0; y < buffer->height; y++) {
             if (y) printf("\n");
@@ -60,7 +60,7 @@ limitations under the License.
         aglEndDraw(buffer);
     }
 
-    void aglSwapBuffers(framebuffer buffer) {
+    void aglSwapBuffers(framebuffer_t buffer) {
         coord x, y;
         for (y = 0; y < buffer->height; y++)
             for (x = 0; x < buffer->width; x++)
@@ -69,7 +69,7 @@ limitations under the License.
         aglEndDraw(buffer);
     }
 
-    void aglSetCell(framebuffer buffer, coord x, coord y, pixel content, color_t fgcolor, color_t bgcolor) {
+    void aglSetCell(framebuffer_t buffer, coord x, coord y, pixel content, color_t fgcolor, color_t bgcolor) {
         unsigned int idx = aglTranslateCoordinates(buffer, x, y);
         
         buffer->texture[idx].update        = !(buffer->texture[idx].content == content && buffer->texture[idx].tint.fgcolor == fgcolor && buffer->texture[idx].tint.bgcolor == bgcolor);
@@ -78,7 +78,7 @@ limitations under the License.
         buffer->texture[idx].tint.bgcolor  = bgcolor;
     }
 
-    void aglClear(framebuffer buffer, pixel chr, color_t fgcolor, color_t bgcolor) {
+    void aglClear(framebuffer_t buffer, pixel chr, color_t fgcolor, color_t bgcolor) {
         coord x, y;
         for (y = 0; y < buffer->height; y++)
             for (x = 0; x < buffer->width; x++)

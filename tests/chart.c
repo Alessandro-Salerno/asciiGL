@@ -14,7 +14,7 @@ int main()
     coord y = 12;
     srand(time(NULL));
 
-    framebuffer buffer = atkSetup();
+    framebuffer_t buffer = atkSetup();
     aglClear(buffer, '+', Black, Black);
     atkInit(buffer);
 
