@@ -7,24 +7,21 @@
 #include <time.h>
 
 
-int main()
-{
+int main() {
     atkSetWindowTitle("Chart Generator - asciiGL");
 
-    coord y = 12;
+    coord_t y = 12;
     srand(time(NULL));
 
-    framebuffer buffer = atkSetup();
+    framebuffer_t buffer = atkSetup();
     aglClear(buffer, '+', Black, Black);
     atkInit(buffer);
 
-    while (true)
-    {
+    while (true) {
         aglClear(buffer, AGL_EMPTY_CHAR, Black, Black);
 
-        coord x;
-        for (x = 0; x < buffer->width; x++)
-        {
+        coord_t x;
+        for (x = 0; x < buffer->width; x++) {
             if (atkGetKeyState(0x1B))
                 atkEnd(buffer);
 

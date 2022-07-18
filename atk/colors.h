@@ -20,8 +20,7 @@ limitations under the License.
 #define ATK_COLORS_H
 
     // 16-bit standard colors
-    typedef enum
-    {
+    typedef enum {
         Black,
         Red,
         Green,

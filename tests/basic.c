@@ -5,18 +5,16 @@
 #include "../atk/utils.h"
 
 
-int main()
-{
+int main() {
     // Sets the window title to "Baisc Program - asciiGL" 
     atkSetWindowTitle("Baisc Program - asciiGL");
 
-    // Creates and initializes a framebuffer to use as asciiGL context
-    framebuffer buffer = atkSetup();
+    // Creates and initializes a framebuffer_t to use as asciiGL context
+    framebuffer_t buffer = atkSetup();
     atkInit(buffer);
     
     // Game loop
-    while (true)
-    {
+    while (true) {
         // End the program if th ESCAPE ky is pressed
         if (atkGetKeyState(0x1B))
             atkEnd(buffer);
