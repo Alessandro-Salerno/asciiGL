@@ -40,7 +40,7 @@ limitations under the License.
     
     void aglDrawCell(framebuffer_t buffer, coord_t x, coord_t y) {
         consoleMoveCursor(x, y);
-        aglDrawIndex(buffer, aglTranslatecoord_tinates(buffer, x, y));
+        aglDrawIndex(buffer, aglTranslateCoordinatesinates(buffer, x, y));
     }
 
     void aglEndDraw(framebuffer_t buffer) {
@@ -54,7 +54,7 @@ limitations under the License.
         for (y = 0; y < buffer->height; y++) {
             if (y) printf("\n");
             for (x = 0; x < buffer->width; x++)
-                aglDrawIndex(buffer, aglTranslatecoord_tinates(buffer, x, y));
+                aglDrawIndex(buffer, aglTranslateCoordinatesinates(buffer, x, y));
         }
 
         aglEndDraw(buffer);
@@ -70,7 +70,7 @@ limitations under the License.
     }
 
     void aglSetCell(framebuffer_t buffer, coord_t x, coord_t y, pixel_t content, rawcolor_t fgcolor, rawcolor_t bgcolor) {
-        unsigned int idx = aglTranslatecoord_tinates(buffer, x, y);
+        unsigned int idx = aglTranslateCoordinatesinates(buffer, x, y);
         
         buffer->texture[idx].update        = !(buffer->texture[idx].content == content && buffer->texture[idx].tint.fgcolor == fgcolor && buffer->texture[idx].tint.bgcolor == bgcolor);
         buffer->texture[idx].content       = content;
