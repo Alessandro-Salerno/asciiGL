@@ -66,7 +66,7 @@ limitations under the License.
 
     framebuffer_t aglCloneaglNewFramebuffer(framebuffer_t buffer) {
         framebuffer_t new_buffer  = aglNewFramebuffer(buffer->width, buffer->height);
-                    *new_buffer = *buffer;
+                     *new_buffer  = *buffer;
 
         return new_buffer;
     }
