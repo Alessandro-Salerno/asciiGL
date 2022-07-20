@@ -24,12 +24,12 @@ limitations under the License.
 
 
     struct _Framebuffer {
-        unsigned int    width; 
-        unsigned int    height; 
-                 size_t size;
+        unsigned int     width; 
+        unsigned int     height; 
+                 size_t  size;
 
-                 cell_t*  texture;
-                 char*  printbuff;
+                 cell_t* texture;
+                 char*   printbuff;
     };
 
     typedef struct _Framebuffer* framebuffer_t;
