@@ -47,7 +47,7 @@ limitations under the License.
         extern void _InitializeCell(cell_t* c, pixel_t content, rawcolor_t fgcolor, rawcolor_t bgcolor);
                int  i;
 
-        for (i = 0 ; i < buffer->size; i++)
+        for (i = 0; i < buffer->size; i++)
             _InitializeCell(&buffer->texture[i], ' ', 255, 0);
 
         return buffer;
